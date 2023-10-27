@@ -11,6 +11,7 @@ if __name__ == "__main__":
         sys.exit()
     if is_git_installed() == False:
         print("[red]Git is not installed on your system.[/red]")
+        sys.exit()
     else:
 
         # Provide a warning and information about obtaining a GitHub access token
