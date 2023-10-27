@@ -1,4 +1,4 @@
-# Autocommiter Utility Functions
+# Autocommiter
 
 This repository contains utility functions for the Autocommiter tool.
 
