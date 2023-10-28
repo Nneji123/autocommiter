@@ -18,7 +18,6 @@ exe = EXE(pyz,
           a.pure,
           a.pure,
           icon='logo.ico'
-          ...
           # Add any additional options or configurations you need
           )
 
@@ -27,11 +26,9 @@ coll = COLLECT(exe,
                a.zipfiles,
                a.datas,
                [],
-               ...
                # Add any additional options or configurations you need
                )
 
 app = BUNDLE('Autocommiter',
-             ...
              # Add any additional options or configurations you need
              )
