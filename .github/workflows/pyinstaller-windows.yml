@@ -3,6 +3,8 @@ name: Package exe with PyInstaller - Windows
 on:
   push:
     branches: [ main ]
+    tags:
+      - '*'
   pull_request:
     branches: [ main]
 
@@ -18,7 +20,24 @@ jobs:
       with:
         path: .
 
-    - uses: actions/upload-artifact@v2
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
       with:
-        name: autocommiter
-        path: release/windows # or path/to/artifact
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+    - name: upload windows exe
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/AutoCommiter.exe
+          asset_name: AutoCommiter.exe
+          asset_content_type: application/exe
