@@ -3,41 +3,50 @@ name: Package exe with PyInstaller - Windows
 on:
   push:
     branches: [ main ]
-    tags:
-      - '*'
   pull_request:
     branches: [ main]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        python-version: ["3.8"]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: PyInstaller Windows
-      uses: JackMcKew/pyinstaller-action-windows@main
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        path: .
+        python-version: ${{ matrix.python-version }}
+    - name: Run build script
+      run: |
+          apt-get update && apt-get ffmpeg libsm6 build-essential cmake libxext6
+          pip install --upgrade setuptools
+          pip install -r requirements.txt auto-py-to-exe
+          pyinstaller autocommiter.spec
+      shell: bash
 
     - name: release
       uses: actions/create-release@v1
       id: create_release
       with:
-          draft: false
-          prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref }}
-          body_path: CHANGELOG.md
+        draft: false
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+        body_path: CHANGELOG.md
       env:
-          GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ github.token }}
 
     - name: upload windows exe
       uses: actions/upload-release-asset@v1
       env:
-          GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/AutoCommiter.exe
-          asset_name: AutoCommiter.exe
-          asset_content_type: application/exe
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/AutoCommiter.exe
+        asset_name: AutoCommiter.exe
+        asset_content_type: application/exe
