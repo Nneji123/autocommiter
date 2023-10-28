@@ -5,8 +5,6 @@ a = Analysis(['main.py'],
              pathex=['.'],
              binaries=[],
              datas=[('logo.ico', '.'), ('requirements.txt', '.'), ('utils.py', '.')],
-             ...
-             # Add any additional options or configurations you need
              )
 
 pyz = PYZ(a.pure, a.zipped_data,
@@ -19,6 +17,7 @@ exe = EXE(pyz,
           a.datas,
           a.pure,
           a.pure,
+          icon='logo.ico'
           ...
           # Add any additional options or configurations you need
           )
