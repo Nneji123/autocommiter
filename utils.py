@@ -16,7 +16,7 @@ def is_git_installed():
     The is_git_installed function checks if Git is installed on the system.
         It returns True if it is, and False otherwise.
 
-    :return: A boolean value
+    :return: A boolean value.
     """
     try:
         # Use the 'git --version' command to check if Git is installed
